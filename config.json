@@ -1,0 +1,71 @@
+{
+  "hostname": "cp.cloudflare.com",
+  "ports": [],
+  "path": "/",
+  "headers": {
+    "User-Agent": ["Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0)"]
+  },
+  "responseHeader": {
+    "Server": "cloudflare"
+  },
+  "responseStatusCode": [200, 204],
+  "ping": true,
+  "maxPing": 300,
+  "goroutines": 8,
+  "scans": 6000,
+  "maxlatency": 1000,
+  "jitter": true,
+  "maxJitter": 20.0,
+  "jitterInterval": 200,
+  "ipVersion": "v4",
+  "iplistPath": "ipv4.txt",
+  "ignoreRange": [],
+  "tls": {
+    "enable": true,
+    "sni": "cp.cloudflare.com",
+    "insecure": false,
+    "alpn": ["h2", "http/1.1"],
+    "utls": {
+      "enable": true,
+      "fingerprint": "firefox"
+    }
+  },
+  "http3": false,
+  "noise": {
+    "enable": false,
+    "packet": "str://meow",
+    "sleep": 500
+  },
+  "linearScan": {
+    "enable": false,
+    "n3": null,
+    "n4": 256
+  },
+  "domainScan": {
+    "enable": false,
+    "domainAsSNI": false,
+    "domainAsHost": false,
+    "shuffle": true,
+    "skipIPV6": true,
+    "domainListPath": "cloudfalare-domains.txt"
+  },
+  "padding": true,
+  "paddingSize": "1-500",
+  "csv": false,
+  "downloadTest": {
+    "enable": false,
+    "url": "https://speed.cloudflare.com/__down?bytes=10000000",
+    "sni": "cp.cloudflare.com",
+    "targetBytes": 5000000,
+    "timeout": 5000
+  },
+  "udpScan": {
+    "enable": false,
+    "packets": [
+      {
+        "payload": "base64://ATVweRyrGwyVXtU8NFbPgilDINuh2HUt4WbUdCQ/N8hbnFXND4SoNbP/JVfsOg+WcASDO5MKq9w8HWp0Azbb60kgSSaK+dc1CA0Jm1qbRRl+ukR/g68Ae7iYjR3tAXzBSU8HYLeMQ3rmx6yS7FF+bIfyXHZ5vSnbUlIDRM53Q5+YRcDoAAAAAAAAAAAAAAAAAAAAAA==",
+        "sleep": 0
+      }
+    ]
+  }
+} 

@@ -1,0 +1,225 @@
+﻿<Window x:Class="WhiteScan.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:infrastructure="clr-namespace:WhiteScan.Infrastructure"
+        xmlns:local="clr-namespace:WhiteScan.Converters"
+        Title="WhiteScan - CloudFlare IP Scanner" Height="900" Width="1200" MinHeight="600" MinWidth="1000" WindowStartupLocation="CenterScreen" Background="#FF303030" FontFamily="Segoe UI" Foreground="White" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize">
+    <Window.Resources>
+        <infrastructure:IntListConverter x:Key="IntListConverter"/>
+        <local:BoolToTextConverter x:Key="BoolToTextConverter"/>
+        <local:BoolToColorConverter x:Key="BoolToColorConverter"/>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#FFE1E1E1"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#FFFF5722" Padding="16" MouseLeftButtonDown="Header_MouseLeftButtonDown">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <materialDesign:PackIcon Kind="Radar" 
+                                       Grid.Column="0"
+                                       Height="32" Width="32" 
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,16,0"
+                                       Foreground="White"/>
+                
+                <TextBlock Text="WhiteScan - CloudFlare IP Scanner" 
+                          Grid.Column="1"
+                          Style="{StaticResource HeaderTextStyle}" 
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"/>
+                
+                <!-- Window Control Buttons -->
+                <StackPanel Grid.Column="2" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                    <Button Content="─" 
+                            Click="MinimizeButton_Click"
+                            Background="Transparent" 
+                            Foreground="White" 
+                            BorderBrush="Transparent"
+                            Width="40" Height="30"
+                            FontSize="16" FontWeight="Bold"
+                            Margin="0,0,4,0"
+                            Cursor="Hand"/>
+                    <Button Content="✕" 
+                            Click="CloseButton_Click"
+                            Background="Transparent" 
+                            Foreground="White" 
+                            BorderBrush="Transparent"
+                            Width="50" Height="30"
+                            FontSize="16" FontWeight="Bold"
+                            Margin="0,0,0,0"
+                            Cursor="Hand"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="#FF424242" CornerRadius="8" Padding="20" Margin="0,0,10,0">
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock Text="📋 Scan Configuration" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,20"/>
+                        <StackPanel Margin="0,0,0,20">
+                            <TextBlock Text="Hostname" Foreground="#FFB0B0B0" Margin="0,4"/>
+                            <TextBox Text="{Binding Configuration.Hostname}" Background="#FF525252" Foreground="White" BorderBrush="#FF666666" Padding="8" Margin="0,0,0,8"/>
+                            <TextBlock Text="Ports (comma separated)" Foreground="#FFB0B0B0" Margin="0,4"/>
+                            <TextBox Text="{Binding Configuration.Ports, Converter={StaticResource IntListConverter}}" Background="#FF525252" Foreground="White" BorderBrush="#FF666666" Padding="8" Margin="0,0,0,8"/>
+                            <TextBlock Text="Path" Foreground="#FFB0B0B0" Margin="0,4"/>
+                            <TextBox Text="{Binding Configuration.Path}" Background="#FF525252" Foreground="White" BorderBrush="#FF666666" Padding="8" Margin="0,0,0,8"/>
+                            <TextBlock Text="IP List File" Foreground="#FFB0B0B0" Margin="0,4"/>
+                            <TextBox Text="{Binding Configuration.IplistPath}" Background="#FF525252" Foreground="White" BorderBrush="#FF666666" Padding="8"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,20">
+                            <TextBlock Text="⚙️ Scan Parameters" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                    <TextBlock Text="Threads" Foreground="#FFB0B0B0" Margin="0,4"/>
+                                    <TextBox Text="{Binding Configuration.Goroutines}" Background="#FF525252" Foreground="White" BorderBrush="#FF666666" Padding="8"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                    <TextBlock Text="Max Scans" Foreground="#FFB0B0B0" Margin="0,4"/>
+                                    <TextBox Text="{Binding Configuration.Scans}" Background="#FF525252" Foreground="White" BorderBrush="#FF666666" Padding="8"/>
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="Max Latency (ms)" Foreground="#FFB0B0B0" Margin="0,8,0,4"/>
+                            <TextBox Text="{Binding Configuration.Maxlatency}" Background="#FF525252" Foreground="White" BorderBrush="#FF666666" Padding="8"/>
+                            <CheckBox Content="Enable Ping Test" IsChecked="{Binding Configuration.Ping}" Foreground="White" Margin="0,12,0,4"/>
+                            <TextBlock Text="Max Ping (ms)" Foreground="#FFB0B0B0" Margin="0,4"/>
+                            <TextBox Text="{Binding Configuration.MaxPing}" Background="#FF525252" Foreground="White" BorderBrush="#FF666666" Padding="8" IsEnabled="{Binding Configuration.Ping}"/>
+                            <CheckBox Content="Export to CSV" IsChecked="{Binding Configuration.CSV}" Foreground="White" Margin="0,12,0,0"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Content="🚀 Start Scan" Command="{Binding StartScanCommand}" Background="#FFFF5722" Foreground="White" FontSize="14" Padding="0,8" Margin="0,0,5,0" BorderBrush="Transparent" Cursor="Hand"/>
+                                <Button Grid.Column="1" Content="🛑 Stop Scan" Command="{Binding StopScanCommand}" Background="#FF757575" Foreground="White" FontSize="14" Padding="0,8" Margin="5,0,0,0" BorderBrush="Transparent" Cursor="Hand"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="0" Content="💾 Save Config" Command="{Binding SaveConfigurationCommand}" Background="#FF607D8B" Foreground="White" FontSize="14" Padding="0,8" Margin="0,0,3,0" BorderBrush="Transparent" Cursor="Hand"/>
+                                <Button Grid.Column="1" Content="🔄 Load Config" Command="{Binding LoadConfigurationCommand}" Background="#FF607D8B" Foreground="White" FontSize="14" Padding="0,8" Margin="3,0,3,0" BorderBrush="Transparent" Cursor="Hand"/>
+                                <Button Grid.Column="2" Content="↻ Reset Config" Command="{Binding ResetConfigurationCommand}" Background="#FF9E9E9E" Foreground="White" FontSize="14" Padding="0,8" Margin="3,0,0,0" BorderBrush="Transparent" Cursor="Hand"/>
+                            </Grid>
+                            <Button Content="📋 View White List" Command="{Binding ViewWhiteListCommand}" Background="#FF4CAF50" Foreground="White" FontSize="14" Padding="0,8" Margin="0,8,0,0" BorderBrush="Transparent" Cursor="Hand"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+            <Border Grid.Column="1" Background="#FF424242" CornerRadius="8" Padding="20" Margin="10,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,15">
+                        <DockPanel Margin="0,0,0,10">
+                            <TextBlock Text="📊 Scan Results  " Style="{StaticResource SectionHeaderStyle}" DockPanel.Dock="Left"/>
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                <TextBlock Text="{Binding LoadedIPCount, StringFormat='IPs: {0}'}" Foreground="#FFB0B0B0" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                <TextBlock Text="{Binding ScanProgress, StringFormat='Progress: {0:P0}'}" Foreground="#FFB0B0B0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DockPanel>
+                        <ProgressBar Value="{Binding ScanProgress}" Height="8" Background="#FF525252" Foreground="#FFFF5722" BorderBrush="Transparent"/>
+                    </StackPanel>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding ScanResults}" Background="#FF525252" Foreground="White" HeadersVisibility="Column" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FF666666" AutoGenerateColumns="False" CanUserSortColumns="True" CanUserResizeColumns="True" IsReadOnly="True" ScrollViewer.ScrollChanged="DataGrid_ScrollChanged">
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#FF666666"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Padding" Value="8"/>
+                                <Setter Property="BorderBrush" Value="#FF777777"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="#FF525252"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#FF616161"/>
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Success">
+                                        <Setter Property="Background" Value="#FF2E7D32"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                        <Setter Property="Background" Value="#FFC62828"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Timeout">
+                                        <Setter Property="Background" Value="#FFEF6C00"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="Padding" Value="8"/>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Number" Binding="{Binding Number}" Width="60"/>
+                            <DataGridTextColumn Header="IP Address" Binding="{Binding IpAddress}" Width="120"/>
+                            <DataGridTextColumn Header="Port" Binding="{Binding Port}" Width="60"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding StatusText}" Width="100"/>
+                            <DataGridTextColumn Header="Response Time (ms)" Binding="{Binding Latency.TotalMilliseconds, StringFormat={}{0:F0}}" Width="140"/>
+                            <DataGridTextColumn Header="Ping (ms)" Binding="{Binding PingTime.TotalMilliseconds, StringFormat={}{0:F0}}" Width="100"/>
+                            <DataGridTextColumn Header="Timestamp" Binding="{Binding ScanTime, StringFormat={}{0:HH:mm:ss}}" Width="100"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+        </Grid>
+        <Border Grid.Row="2" Background="#FF616161" Padding="16,8">
+            <DockPanel>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="White" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <TextBlock Text="   |   " Foreground="White" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding TotalScansText}" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <TextBlock Text="{Binding SuccessfulScansText}" Foreground="GreenYellow" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <TextBlock Text="{Binding FailedScansText}" Foreground="#e29797" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <TextBlock Text="|   " Foreground="White" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="https://github.com/codenchart" Foreground="White" VerticalAlignment="Center" FontWeight="Bold"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>
